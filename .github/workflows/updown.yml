@@ -70,26 +70,25 @@ jobs:
    needs: job1
 
    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3  
-      with:
-       node-version: '18.x'  
+      - name: Set up Node.js
+        uses: actions/setup-node@v3  
+        with:
+          node-version: '18.x'
 
-    - name: Install dependencies
-      run: npm install \
-           --verbose=true \
-           --customCommand=install \
-           --customRegistry=useNpmrc \
-           --customFeed="" \
-           --customEndpoint="" \
-           --publishRegistry=useExternalRegistry \
-           --publishFeed="" \
-           --publishPackageMetadata=true \
-           --publishEndpoint=""
+      - name: Debug current directory
+        run: |
+          echo "Current Directory: $(pwd)"
+          Get-ChildItem -Recurse  # List files to ensure repository is checked out
 
-    - name: Run the application
-      run: node index.js
- 
+      - name: Install dependencies
+        run: |
+          cd ${{ github.workspace }}  # Ensure the working directory is correct
+          npm install --verbose=true --customCommand=install --customRegistry=useNpmrc --customFeed="" --customEndpoint="" --publishRegistry=useExternalRegistry --publishFeed="" --publishPackageMetadata=true --publishEndpoint=""
+
+      - name: Run the application
+        run: |
+          cd ${{ github.workspace }}  # Ensure the working directory is correct
+          node index.js
