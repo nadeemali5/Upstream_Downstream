@@ -80,7 +80,6 @@ jobs:
 
     - name: Install dependencies
       run: npm install \
-           --workingDir=ClientApp \
            --verbose=true \
            --customCommand=install \
            --customRegistry=useNpmrc \
