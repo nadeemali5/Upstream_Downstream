@@ -1,5 +1,5 @@
 
-# Running -> dotnet restore, dotnet build, dotnet run
+# Running -> dotnet restore, dotnet build, dotnet run followed by npm
 name: .NET 6 Build, Restore, and Run
 
 on:
@@ -15,7 +15,6 @@ env:
 
 jobs:
   job1:
-  build:
     runs-on: windows-latest    
 
     steps:
@@ -67,29 +66,31 @@ jobs:
           dotnet run --project MyDotnetApp.csproj --configuration Release
 
   job2:
-  runs-on: windows-latest
+   runs-on: windows-latest
+   needs: job1
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+   steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3  
-        with:
-          node-version: '18.x'  
+    - name: Set up Node.js
+      uses: actions/setup-node@v3  
+      with:
+       node-version: '18.x'  
 
-      - name: Install dependencies
-        run: npm install \
-            --workingDir=ClientApp \
-            --verbose=true \
-            --customCommand=install \
-            --customRegistry=useNpmrc \
-            --customFeed="" \
-            --customEndpoint="" \
-            --publishRegistry=useExternalRegistry \
-            --publishFeed="" \
-            --publishPackageMetadata=true \
-            --publishEndpoint=""
+    - name: Install dependencies
+      run: npm install \
+           --workingDir=ClientApp \
+           --verbose=true \
+           --customCommand=install \
+           --customRegistry=useNpmrc \
+           --customFeed="" \
+           --customEndpoint="" \
+           --publishRegistry=useExternalRegistry \
+           --publishFeed="" \
+           --publishPackageMetadata=true \
+           --publishEndpoint=""
 
-      - name: Run the ap
+    - name: Run the application
+      run: node index.js
  
